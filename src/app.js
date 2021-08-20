@@ -2,6 +2,7 @@ const express = require("express")
 const { connectToDB } = require("./db/mongoose")
 const bizFundraiserRouter = require("./routers/bizFundraiserRouter")
 const projectMakerRouter = require("./routers/projectMakerRouter")
+const milestoneRouter = require("./routers/milestoneRouter")
 
 const getApp = async () => {
     //Connect to database
@@ -24,6 +25,7 @@ const getApp = async () => {
     //Attach routers to express server
     app.use(bizFundraiserRouter)
     app.use(projectMakerRouter)
+    app.use(milestoneRouter)
 
     return app
 }

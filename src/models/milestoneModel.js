@@ -3,6 +3,11 @@ const mongoose = require("mongoose")
 const milestoneSchema = new mongoose.Schema(
     {
         projectId: { type: String, required: true, trim: true },
+        owner: {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "ProjectMaker",
+        },
         milestoneIndex: { type: Number, required: true },
         title: { type: String, required: true },
         description: { type: String, required: true },

@@ -135,7 +135,7 @@ router.patch("/projectmakers/me", auth, async (req, res) => {
 })
 
 // After creating a project add the relevant project address in projectmakers array of projects
-router.patch("/projectmaker/createproject", auth, async (req, res) => {
+router.patch("/project/projectmaker/createproject", auth, async (req, res) => {
     try {
         const projectAddress = req.body.projectAddress
         if (!projectAddress) {
@@ -153,6 +153,36 @@ router.patch("/projectmaker/createproject", auth, async (req, res) => {
         }
 
         projectMaker.projectIds = [...projectIds, projectAddress]
+
+        const updatedProjectMaker = await projectMaker.save()
+
+        res.send(updatedProjectMaker)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+// After removing a project remove the relevant project address in projectmakers array of projects
+router.patch("/project/projectmaker/deleteproject", auth, async (req, res) => {
+    try {
+        const projectAddress = req.body.projectAddress
+        if (!projectAddress) {
+            res.status(400).send({ error: "invalid project address" })
+            return
+        }
+
+        const projectMaker = req.projectMaker
+
+        const projectIds = projectMaker.projectIds
+
+        if (!projectIds.includes(projectAddress)) {
+            res.status(400).send({ error: "project address not included" })
+            return
+        }
+
+        projectMaker.projectIds = projectIds.filter(
+            (projectId) => projectId !== projectAddress
+        )
 
         const updatedProjectMaker = await projectMaker.save()
 
