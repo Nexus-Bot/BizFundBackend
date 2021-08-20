@@ -1,0 +1,54 @@
+name: Node CI
+
+on: [push, pull_request_target]
+
+jobs:
+    # format:
+    #     name: Code Formatter
+    #     runs-on: ubuntu-latest
+    #     steps:
+    #         - name: Node Code Formatter
+    #           uses: MarvinJWendt/run-node-formatter@stable
+    #           env:
+    #               GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    setupnode:
+        name: Setup and Test NodeJs
+        # needs: format
+        runs-on: ubuntu-latest
+        env:
+            PORT: ${{secrets.PORT}}
+            GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+            GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+            MONGO_URI: ${{secrets.MONGO_URI}}
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Cache node modules
+              uses: actions/cache@v2
+              env:
+                  cache-name: cache-node-modules
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-${{ env.cache-name }}-
+                      ${{ runner.os }}-build-
+                      ${{ runner.os }}-
+
+            - name: Setup Node
+              uses: actions/setup-node@v2
+              with:
+                  node-version: "16"
+
+            - name: Install Dependencies
+              run: npm install
+
+            - name: Check Formatting
+              run: npm run lint
+
+            - name: Run Tests
+              run: npm run test
+            # - run: npm run build
