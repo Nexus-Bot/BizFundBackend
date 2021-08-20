@@ -16,11 +16,11 @@ jobs:
         name: Setup and Test NodeJs
         # needs: format
         runs-on: ubuntu-latest
-        env:
-            PORT: ${{secrets.PORT}}
-            GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
-            GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
-            MONGO_URI: ${{secrets.MONGO_URI}}
+        # env:
+        #     PORT: ${{secrets.PORT}}
+        #     GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+        #     GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+        #     MONGO_URI: ${{secrets.MONGO_URI}}
 
         steps:
             - name: Checkout
