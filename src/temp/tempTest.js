@@ -1,3 +1,3 @@
-const sampleTest = (a, b) => a + b;
+const sampleTest = (a, b) => a + b
 
-module.exports = { sampleTest };
+module.exports = { sampleTest }
