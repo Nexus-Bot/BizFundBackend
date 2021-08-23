@@ -6,7 +6,6 @@
     "scripts": {
         "start": "node ./src/index.js",
         "dev": "env-cmd -f ./config/dev.env nodemon ./src/index.js",
-        "build": "node ./src/index.js",
         "test-local": "env-cmd -f ./config/test.env jest --watch",
         "test": "jest --forceExit",
         "format": "prettier --write \"src/**/*.js\" --config .prettierrc",
