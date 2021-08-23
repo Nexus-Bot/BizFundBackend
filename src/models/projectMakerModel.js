@@ -46,7 +46,6 @@ const projectMakerSchema = new mongoose.Schema(
         },
         metamaskAddress: {
             type: String,
-            unique: true,
             trim: true,
         },
         projectIds: [String],
