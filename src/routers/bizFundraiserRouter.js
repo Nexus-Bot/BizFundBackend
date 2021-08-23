@@ -1,7 +1,8 @@
 const express = require("express")
 const BizFundraiser = require("../models/bizFundraiserModel")
 const auth = require("../middlewares/authBizFundraiser")
-// const { sendWelcomeMail, sendAccountDeleteMail } = require('../mail/account');
+const jwt = require("jsonwebtoken")
+const { sendActivationMailForBizFundraiser } = require("../mail/account")
 
 const router = express.Router()
 
@@ -11,8 +12,34 @@ router.post("/bizfundraisers", async (req, res) => {
         const bizFundraiser = new BizFundraiser(req.body)
         const bizFundraiserDoc = await bizFundraiser.save()
         const token = await bizFundraiser.generateAuthenticationToken()
+        sendActivationMailForBizFundraiser(bizFundraiserDoc._id)
         // sendWelcomeMail(bizFundraiser.name, bizFundraiser.email);
         res.status(201).send({ bizFundraiserDoc, token })
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+// Activate user with email activation link
+router.get("/bizfundraiser/activate", async (req, res) => {
+    try {
+        const token = req.query.token
+        const secret = process.env.JWT_SECRET
+        const decoded = jwt.verify(token, secret)
+
+        const bizFundraiser = await BizFundraiser.findOne({
+            _id: decoded._id,
+        })
+
+        if (!bizFundraiser) {
+            res.status(404).send("Invalid Link")
+            return
+        }
+
+        bizFundraiser.isVerified = true
+        const updatedBizFundraiser = await bizFundraiser.save()
+
+        res.send(updatedBizFundraiser)
     } catch (error) {
         res.status(400).send(error)
     }

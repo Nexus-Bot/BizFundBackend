@@ -1,7 +1,8 @@
 const express = require("express")
 const ProjectMaker = require("../models/projectMakerModel")
 const auth = require("../middlewares/authProjectMaker")
-// const { sendWelcomeMail, sendAccountDeleteMail } = require('../mail/account');
+const { sendActivationMailForProjectMaker } = require("../mail/account")
+const jwt = require("jsonwebtoken")
 
 const router = express.Router()
 
@@ -11,8 +12,34 @@ router.post("/projectmakers", async (req, res) => {
         const projectMaker = new ProjectMaker(req.body)
         const projectMakerDoc = await projectMaker.save()
         const token = await projectMaker.generateAuthenticationToken()
+        sendActivationMailForProjectMaker(projectMakerDoc._id)
         // sendWelcomeMail(projectMaker.name, projectMaker.email);
         res.status(201).send({ projectMakerDoc, token })
+    } catch (error) {
+        res.status(400).send(error)
+    }
+})
+
+// Activate user with email activation link
+router.get("/projectmaker/activate", async (req, res) => {
+    try {
+        const token = req.query.token
+        const secret = process.env.JWT_SECRET
+        const decoded = jwt.verify(token, secret)
+
+        const projectMaker = await ProjectMaker.findOne({
+            _id: decoded._id,
+        })
+
+        if (!projectMaker) {
+            res.status(404).send("Invalid Link")
+            return
+        }
+
+        projectMaker.isVerified = true
+        const updatedProjectMaker = await projectMaker.save()
+
+        res.send(updatedProjectMaker)
     } catch (error) {
         res.status(400).send(error)
     }
@@ -107,7 +134,6 @@ router.patch("/projectmakers/me", auth, async (req, res) => {
         "password",
         "photoURL",
         "metamaskAddress",
-        "isVerified",
     ]
 
     const isValidUpdates = updates.every((update) =>
