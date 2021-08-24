@@ -61,6 +61,18 @@ router.post("/bizfundraisers/login", async (req, res) => {
     }
 })
 
+//LogIn using token for projectMaker
+router.post("/bizfundraisers/login/token", auth, async (req, res) => {
+    const bizFundraiser = req.bizFundraiser
+
+    if (!bizFundraiser) {
+        res.status(404).send("User not found")
+        return
+    }
+
+    res.status(200).send(bizFundraiser)
+})
+
 //LogOut bizFundraiser from one session
 router.post("/bizfundraisers/logout", auth, async (req, res) => {
     try {
