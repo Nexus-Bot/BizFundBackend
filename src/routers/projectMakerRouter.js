@@ -61,6 +61,18 @@ router.post("/projectmakers/login", async (req, res) => {
     }
 })
 
+//LogIn using token for projectMaker
+router.post("/projectmakers/login/token", auth, async (req, res) => {
+    const projectMaker = req.projectMaker
+
+    if (!projectMaker) {
+        res.status(404).send("User not found")
+        return
+    }
+
+    res.status(200).send(projectMaker)
+})
+
 //LogOut projectMaker from one session
 router.post("/projectmakers/logout", auth, async (req, res) => {
     try {

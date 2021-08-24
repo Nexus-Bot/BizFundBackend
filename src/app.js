@@ -3,6 +3,7 @@ const { connectToDB } = require("./db/mongoose")
 const bizFundraiserRouter = require("./routers/bizFundraiserRouter")
 const projectMakerRouter = require("./routers/projectMakerRouter")
 const milestoneRouter = require("./routers/milestoneRouter")
+const cors = require("cors")
 
 const getApp = async () => {
     //Connect to database
@@ -18,6 +19,9 @@ const getApp = async () => {
     // 		"Site is under maintainance, Please check back soon :)"
     // 	);
     // });
+
+    //Add cors to app
+    app.use(cors())
 
     //Add json body to response object
     app.use(express.json())
