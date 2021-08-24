@@ -121,10 +121,28 @@ router.get("/projectmakers/me", auth, (req, res) => {
 })
 
 //Get projectMaker by ID from DB
-router.get("/projectmakers/:id", auth, async (req, res) => {
+router.get("/projectmakers/:id", async (req, res) => {
     try {
         const _id = req.params.id
         const projectMaker = await ProjectMaker.findById(_id)
+
+        if (!projectMaker) {
+            res.status(404).send({ error: "ProjectMaker not found!!!" })
+            return
+        }
+        res.send(projectMaker)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+// Get projectMaker by metamaskAddress from DB
+router.get("/projectmakersbymetamask/:id", async (req, res) => {
+    try {
+        const metamaskAddress = req.params.id
+        const projectMaker = await ProjectMaker.findOne({
+            metamaskAddress,
+        })
 
         if (!projectMaker) {
             res.status(404).send({ error: "ProjectMaker not found!!!" })

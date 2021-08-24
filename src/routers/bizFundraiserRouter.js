@@ -121,13 +121,31 @@ router.get("/bizfundraisers/me", auth, (req, res) => {
 })
 
 //Get bizFundraiser by ID from DB
-router.get("/bizfundraisers/:id", auth, async (req, res) => {
+router.get("/bizfundraisers/:id", async (req, res) => {
     try {
         const _id = req.params.id
         const bizFundraiser = await BizFundraiser.findById(_id)
 
         if (!bizFundraiser) {
             res.status(404).send({ error: "BizFundraiser not found!!!" })
+            return
+        }
+        res.send(bizFundraiser)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+// Get bizFundraiser by metamaskAddress from DB
+router.get("/bizfundraisersbymetamask/:id", async (req, res) => {
+    try {
+        const metamaskAddress = req.params.id
+        const bizFundraiser = await BizFundraiser.findOne({
+            metamaskAddress,
+        })
+
+        if (!bizFundraiser) {
+            res.status(404).send({ error: "ProjectMaker not found!!!" })
             return
         }
         res.send(bizFundraiser)
