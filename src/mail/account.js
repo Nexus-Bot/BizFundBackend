@@ -23,12 +23,12 @@ const sendMailFromNM = (mailOptions) => {
     })
 }
 
-const sendActivationMailForProjectMaker = async (userId) => {
+const sendActivationMailForProjectMaker = async (user) => {
     const secret = process.env.JWT_SECRET
-    const token = jwt.sign({ _id: userId.toString() }, secret)
+    const token = jwt.sign({ _id: user._id.toString() }, secret)
     let mailOptions = {
         from: "nexus.org.co@gmail.com",
-        to: "beastpredator39@gmail.com",
+        to: user.email,
         subject: "Activation mail",
         text: `Link to activate your account - \n ${process.env.BASE_URL}/projectmaker/activate?token=${token}`,
     }
@@ -36,12 +36,12 @@ const sendActivationMailForProjectMaker = async (userId) => {
     sendMailFromNM(mailOptions)
 }
 
-const sendActivationMailForBizFundraiser = async (userId) => {
+const sendActivationMailForBizFundraiser = async (user) => {
     const secret = process.env.JWT_SECRET
-    const token = jwt.sign({ _id: userId.toString() }, secret)
+    const token = jwt.sign({ _id: user._id.toString() }, secret)
     let mailOptions = {
         from: "nexus.org.co@gmail.com",
-        to: "beastpredator39@gmail.com",
+        to: user.email,
         subject: "Activation mail",
         text: `Link to activate your account - \n ${process.env.BASE_URL}/bizfundraiser/activate?token=${token}`,
     }
