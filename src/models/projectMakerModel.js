@@ -66,7 +66,21 @@ projectMakerSchema.methods.toJSON = function () {
 projectMakerSchema.methods.generateAuthenticationToken = async function () {
     const user = this
     const secret = process.env.JWT_SECRET
-    const token = jwt.sign({ _id: user._id.toString() }, secret)
+    const claims = {
+        // Required claims for weavy
+        exp: new Date().getTime() + 300 * 24 * 60 * 60,
+        iss: process.env.WEAVY_CLIENT_ID,
+        sub: user._id.toString(),
+
+        // Optional claims for weavy
+        email: user.email,
+        name: user.firstName + " " + user.lastName,
+        username: user.displayName,
+
+        // Required claims for this backend
+        _id: user._id.toString(),
+    }
+    const token = jwt.sign(claims, secret)
 
     user.tokens = user.tokens.concat({ token })
     await user.save()
