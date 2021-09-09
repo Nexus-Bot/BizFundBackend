@@ -12,7 +12,7 @@ router.post("/bizfundraisers", async (req, res) => {
         const bizFundraiser = new BizFundraiser(req.body)
         const bizFundraiserDoc = await bizFundraiser.save()
         const token = await bizFundraiser.generateAuthenticationToken()
-        sendActivationMailForBizFundraiser(bizFundraiserDoc._id)
+        sendActivationMailForBizFundraiser(bizFundraiserDoc)
         // sendWelcomeMail(bizFundraiser.name, bizFundraiser.email);
         res.status(201).send({ bizFundraiserDoc, token })
     } catch (error) {

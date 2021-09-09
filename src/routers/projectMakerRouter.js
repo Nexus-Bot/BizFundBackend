@@ -12,7 +12,7 @@ router.post("/projectmakers", async (req, res) => {
         const projectMaker = new ProjectMaker(req.body)
         const projectMakerDoc = await projectMaker.save()
         const token = await projectMaker.generateAuthenticationToken()
-        sendActivationMailForProjectMaker(projectMakerDoc._id)
+        sendActivationMailForProjectMaker(projectMakerDoc)
         // sendWelcomeMail(projectMaker.name, projectMaker.email);
         res.status(201).send({ projectMakerDoc, token })
     } catch (error) {
