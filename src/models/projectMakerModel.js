@@ -68,7 +68,7 @@ projectMakerSchema.methods.generateAuthenticationToken = async function () {
     const secret = process.env.JWT_SECRET
     const claims = {
         // Required claims for weavy
-        exp: new Date().getTime() + 300 * 24 * 60 * 60,
+        exp: new Date().getTime() + new Date().getTime(),
         iss: process.env.WEAVY_CLIENT_ID,
         sub: user._id.toString(),
 
